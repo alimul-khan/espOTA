@@ -21,5 +21,5 @@ void loop() {
 
   // tiny heartbeat
   static uint32_t t=0; static bool s=false;
-  if (millis()-t>100) { t=millis(); s=!s; digitalWrite(LED_BUILTIN, s?LOW:HIGH); }
+  if (millis()-t>1000) { t=millis(); s=!s; digitalWrite(LED_BUILTIN, s?LOW:HIGH); }
 }
