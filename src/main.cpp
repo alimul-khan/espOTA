@@ -1,18 +1,25 @@
 #include <Arduino.h>
-
-// put function declarations here:
-int myFunction(int, int);
+#include "wifi_manager.h"
+#include "web_server.h"
+#include "ota_handler.h"
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(115200);
+  delay(200);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH); // off (active low)
+
+  wifiManagerSetup();  // STA with saved creds, else AP fallback
+  webServerSetup();    // status + config pages
+  otaSetup();          // OTA ready (works in STA; can also work while in AP)
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+  wifiManagerLoop();
+  webServerLoop();
+  otaLoop();
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  // tiny heartbeat
+  static uint32_t t=0; static bool s=false;
+  if (millis()-t>100) { t=millis(); s=!s; digitalWrite(LED_BUILTIN, s?LOW:HIGH); }
 }
